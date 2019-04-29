@@ -18,22 +18,6 @@ int y;
 
 String command = "";
 
-void setup()
-{
-  for (int i = 1; i < 17; ++i)
-  {
-    printDebug("Boucle");
-    Score = i;
-    setCase(Score);
-    readTable(OnCase, 1);
-  }
-
-}
-
-void loop()
-{
-}
-
 void OnAllLed(int team) {
   for (int i = 0; i < 4; ++i) {
     for (int j = 0; j < 4; j++) {
@@ -42,8 +26,7 @@ void OnAllLed(int team) {
   }
 }
 
-int goToCenter[2][4][4] =
-{
+int goToCenter[2][4][4] ={
   {
     {1, 1, 1, 1},
     {1, 0, 0, 1},
@@ -111,6 +94,22 @@ void readTable(int table[4][4], int team) {
   }
 }
 
+void setup()
+{
+  Serial.begin(9600);
+  for (int i = 1; i < 17; ++i)
+  {
+    printDebug("");
+    Score = i;
+    setCase(Score);
+    readTable(OnCase, 2);
+  }
+
+}
+
+void loop()
+{
+}
 
 
 

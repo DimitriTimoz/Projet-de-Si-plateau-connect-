@@ -2,7 +2,8 @@
 #include "Arduino.h"
 
 void printDebug(String data){
-  if("data.lenght()> 0")
+  Serial.println("");
+  if(sizeof(data)> 0)
   {
     Serial.println("=========================================");
     Serial.println("Debug Message: "); Serial.print(data);
