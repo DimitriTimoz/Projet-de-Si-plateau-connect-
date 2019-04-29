@@ -6,6 +6,7 @@
   Description :
 ******************************************************************/
 #include <SoftwareSerial.h>
+#include "horloge.h"
 
 SoftwareSerial BTSerial(2, 3); // RX | TX
 
@@ -16,6 +17,22 @@ int x;
 int y;
 
 String command = "";
+
+void setup()
+{
+  for (int i = 1; i < 17; ++i)
+  {
+    printDebug("Boucle");
+    Score = i;
+    setCase(Score);
+    readTable(OnCase, 1);
+  }
+
+}
+
+void loop()
+{
+}
 
 void OnAllLed(int team) {
   for (int i = 0; i < 4; ++i) {
@@ -53,30 +70,23 @@ void animGoToCenter() {
 
 
 //Set case according to score
-void setCase() {
+void setCase(int data) {
+  //clear
   for (int i = 0; i < 4; ++i) {
     for (int j = 0; j < 4; j++) {
       OnCase[i][j] = 0;
     }
   }
-  x = (Score / 4);
-  y = (Score % 4) - 1;
+  //generate x and y
+  x = (data / 4);
+  y = (data % 4);
 
   // switch 0 to 3
   if ((x % 2) == 1)
   {
-    if (y == 0) {
-      y = 3;
-    } else if (y == 1) {
-      y = 2;
-    } else if (y == 2) {
-      y = 1;
-    } else if (y == 3) {
-      y = 0;
-    }
-    x = (Score / 4);
-    OnCase[x][y] = 1;
+    y = 3 - y;
   }
+  OnCase[x][y] = 1;
 }
 
 //read the data sheet
@@ -101,28 +111,7 @@ void readTable(int table[4][4], int team) {
   }
 }
 
-void setup()
-{
-  Serial.begin(9600);
-  Serial.println("Enter AT commands:");
-  BTSerial.begin(9600);  // HC-05 default speed in AT command more
-  
-  for (int i = 1; i < 17; ++i)
-  {
-    Score = i;
-    setCase();
-    readTable(OnCase, 1);
-  }
 
-}
 
-void loop()
-{
- if (BTSerial.available())
-    Serial.write(BTSerial.read());
-  
-  // Keep reading from Arduino Serial Monitor and send to HC-05
-  if (Serial.available())
-    BTSerial.write(Serial.read());
-}
+
 
