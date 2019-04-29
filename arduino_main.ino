@@ -8,7 +8,7 @@
 #include <SoftwareSerial.h>
 #include "horloge.h"
 
-SoftwareSerial BTSerial(2, 3); // RX | TX
+SoftwareSerial bluetooth(2, 3); // RX | TX
 
 
 int OnCase[4][4]; // init table
@@ -26,7 +26,7 @@ void OnAllLed(int team) {
   }
 }
 
-int goToCenter[2][4][4] ={
+int goToCenter[2][4][4] = {
   {
     {1, 1, 1, 1},
     {1, 0, 0, 1},
@@ -82,13 +82,13 @@ void readTable(int table[4][4], int team) {
       Serial.print(table[i][j]);
       ++caseNum;
       if (table[i][j] == 1 && team == 1) {
-        digitalWrite(caseNum, 1);
+        digitalWrite(caseNum + 2, 1);
       } if (table[i][j] == 1 && team == 2) {
-        digitalWrite(caseNum + 16, 1);
+        digitalWrite(caseNum + 18, 1);
       } if (table[i][j] == 0 && team == 2) {
-        digitalWrite(caseNum + 16, 0);
+        digitalWrite(caseNum + 18, 0);
       } else {
-        digitalWrite(caseNum, 0);
+        digitalWrite(caseNum +2, 0);
       }
     }
   }
@@ -97,6 +97,7 @@ void readTable(int table[4][4], int team) {
 void setup()
 {
   Serial.begin(9600);
+  bluetooth.begin(9600);
   for (int i = 1; i < 17; ++i)
   {
     printDebug("");
@@ -109,6 +110,15 @@ void setup()
 
 void loop()
 {
+  if (bluetooth.available())
+  {
+    Serial.write(bluetooth.read());
+  }
+  while (Serial.available())
+  {
+    delay(3);
+    bluetooth.write(Serial.read());
+  }
 }
 
 
