@@ -1,11 +1,13 @@
 /******************************************************************
   Created with PROGRAMINO IDE for Arduino - 28.04.2019 16:14:49
-  Project     :
+  Project     : Plateau connecté via hc 05 à l'application.
   Libraries   :
-  Author      :
+  Authors     : Egone and Dimitri
   Description :
 ******************************************************************/
+#include <SoftwareSerial.h>
 
+SoftwareSerial BTSerial(2, 3); // RX | TX
 
 
 int OnCase[4][4]; // init table
@@ -13,34 +15,38 @@ int Score = 0;
 int x;
 int y;
 
+String command = "";
+
 void OnAllLed(int team) {
   for (int i = 0; i < 4; ++i) {
     for (int j = 0; j < 4; j++) {
-      table[i][j] = 1;
+      OnCase[i][j] = 1;
     }
   }
 }
 
-int goToCenter[][] =
-  [[
-     [1, 1, 1, 1],
-     [1, 0, 0, 1],
-     [1, 0, 0, 1],
-     [1, 1, 1, 1]
-   ],
-   [
-     [0, 0, 0, 0],
-     [0, 1, 1, 0],
-     [0, 1, 1, 0],
-     [0, 0, 0, 0],
-   ]]
+int goToCenter[2][4][4] =
+{
+  {
+    {1, 1, 1, 1},
+    {1, 0, 0, 1},
+    {1, 0, 0, 1},
+    {1, 1, 1, 1}
+  },
+  {
+    {0, 0, 0, 0},
+    {0, 1, 1, 0},
+    {0, 1, 1, 0},
+    {0, 0, 0, 0}
+  }
+};
 
 void animGoToCenter() {
   for (int i = 0; i < 2; i++)
   {
-    for (int j = 1; j < 3; j++;) {
-      Delay(1000 * 2);
-      onCases(goToCenter[i], j )
+    for (int j = 1; j < 3; j++) {
+      delay(1000 * 2);
+      readTable(goToCenter[i], j );
     }
   }
 }
@@ -74,7 +80,7 @@ void setCase() {
 }
 
 //read the data sheet
-void onCases(int table[4][4], int team) {
+void readTable(int table[4][4], int team) {
   int caseNum = 0;
   Serial.println("");
   for (int i = 0; i < 4; ++i) {
@@ -98,19 +104,25 @@ void onCases(int table[4][4], int team) {
 void setup()
 {
   Serial.begin(9600);
+  Serial.println("Enter AT commands:");
+  BTSerial.begin(9600);  // HC-05 default speed in AT command more
+  
   for (int i = 1; i < 17; ++i)
   {
     Score = i;
     setCase();
-    onCases(OnCase, 1);
+    readTable(OnCase, 1);
   }
 
 }
 
 void loop()
 {
-
-
-
+ if (BTSerial.available())
+    Serial.write(BTSerial.read());
+  
+  // Keep reading from Arduino Serial Monitor and send to HC-05
+  if (Serial.available())
+    BTSerial.write(Serial.read());
 }
 
