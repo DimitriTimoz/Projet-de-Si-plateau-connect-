@@ -3,7 +3,7 @@
    Project     : Plateau connecté via hc 06 à l'application.
    Libraries   : SoftwareSerial.h
    Authors     : Egone and Dimitri
-   Description :
+   Description :c nou ki lavon fé
 ******************************************************************/
 #include <SoftwareSerial.h>
 
