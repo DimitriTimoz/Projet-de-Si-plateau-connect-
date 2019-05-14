@@ -2,7 +2,7 @@
    Created with PROGRAMINO IDE for Arduino - 28.04.2019 16:14:49
    Project     : Plateau connecté via hc 06 à l'application.
    Libraries   : SoftwareSerial.h
-   Authors     : Egone and Dimitri
+   Authors     : Dimitri and Egone
    Description :
 ******************************************************************/
 #include <SoftwareSerial.h>
